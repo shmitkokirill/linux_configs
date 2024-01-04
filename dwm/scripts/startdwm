@@ -1,0 +1,29 @@
+#!/bin/sh
+
+# tearfree option
+picom -b --backend glx --vsync --xrender-sync-fence --glx-no-rebind-pixmap \
+    --use-damage --glx-no-stencil
+
+# set background
+~/.fehbg &
+
+#setxkbmap us,ru -option 'grp:shift_alt_toggle'
+
+# autostart apps
+vk &
+telegram-desktop -startintray &
+flameshot &
+
+# Statusbar loop
+while true; do
+    ubar
+    sleep 1s    # Update time every second
+done &
+
+# relaunch DWM
+while true; do
+    # Log stderror to a file 
+    dwm 2> ~/.dwm.log
+    # No error logging
+    #dwm >/dev/null 2>&1
+done

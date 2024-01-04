@@ -1,0 +1,9 @@
+# rename to ~/.Xresources
+
+Xft.autohint: false
+Xft.lcdfilter: lcddefault
+Xft.hintstyle: hintslight
+Xft.hinting: true
+Xft.anialias: true
+Xft.rgba: rgb
+Xft.dpi: 200
