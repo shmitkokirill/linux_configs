@@ -266,6 +266,8 @@ static int xerror(Display *dpy, XErrorEvent *ee);
 static int xerrordummy(Display *dpy, XErrorEvent *ee);
 static int xerrorstart(Display *dpy, XErrorEvent *ee);
 static void zoom(const Arg *arg);
+/* my declarations */
+static void view_adjacent(const Arg *arg); /*cycle tags*/
 
 /* variables */
 static Systray *systray = NULL;
@@ -1213,6 +1215,8 @@ manage(Window w, XWindowAttributes *wa)
 	updatewindowtype(c);
 	updatesizehints(c);
 	updatewmhints(c);
+	c->x = c->mon->mx + (c->mon->mw - WIDTH(c)) / 2;
+	c->y = c->mon->my + (c->mon->mh - HEIGHT(c)) / 2;
 	XSelectInput(dpy, w, EnterWindowMask|FocusChangeMask|PropertyChangeMask|StructureNotifyMask);
 	grabbuttons(c, 0);
 	if (!c->isfloating)
@@ -2608,6 +2612,28 @@ zoom(const Arg *arg)
 	if (c == nexttiled(selmon->clients) && !(c = nexttiled(c->next)))
 		return;
 	pop(c);
+}
+
+void
+view_adjacent(const Arg *arg)
+{
+	int i, curtags;
+	int seltag = 0;
+	Arg a;
+
+	curtags = selmon->tagset[selmon->seltags];
+	for(i = 0; i < LENGTH(tags); i++)
+		if(curtags & (1 << i)){
+			seltag = i;
+			break;
+		}
+
+	seltag = (seltag + arg->i) % (int)LENGTH(tags);
+	if(seltag < 0)
+		seltag += LENGTH(tags);
+
+	a.i = (1 << seltag);
+	view(&a);
 }
 
 int

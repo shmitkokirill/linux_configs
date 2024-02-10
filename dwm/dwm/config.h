@@ -78,21 +78,25 @@ static const Layout layouts[] = {
 
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
-static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
+static const char *dmenucmd[] = 
+{ "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", 
+    col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
 static const char *termcmd[]  = { "alacritty", NULL };
-static const char *brupcmd[] = { "light", "-A", "10", NULL };
-static const char *brdowncmd[] = { "light", "-U", "10", NULL };
+static const char *brupcmd[] = { "gmux_backlight", "+30", NULL };
+static const char *brdowncmd[] = { "gmux_backlight", "-30", NULL };
 static const char *flameshot[] = { "flameshot", "gui", NULL };
-
 
 static Key keys[] = {
 	/* modifier                     key        function        argument */
+
+	{ MODKEY,                       XK_i,      view_adjacent,  { .i = +1 } },
+	{ MODKEY,                       XK_u,      view_adjacent,  { .i = -1 } },
 	{ MODKEY,                       XK_d,      spawn,          {.v = dmenucmd } },
 	{ MODKEY,                       XK_Return, spawn,          {.v = termcmd } },
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
-	{ MODKEY,                       XK_i,      incnmaster,     {.i = +1 } },
+	{ MODKEY,                       XK_y,      incnmaster,     {.i = +1 } },
 	{ MODKEY,                       XK_p,      incnmaster,     {.i = -1 } },
 	{ MODKEY,                       XK_h,      setmfact,       {.f = -0.05} },
 	{ MODKEY,                       XK_l,      setmfact,       {.f = +0.05} },
@@ -126,10 +130,12 @@ static Key keys[] = {
 	{ 0,    XF86XK_AudioRaiseVolume,    spawn,  SHCMD("pactl set-sink-volume 0 +3% && dunstvol") },
 	{ 0,    XF86XK_MonBrightnessUp,     spawn,  {.v = brupcmd} },
 	{ 0,    XF86XK_MonBrightnessDown,   spawn,  {.v = brdowncmd} },
-    { 0,    XK_Print,   spawn,  {.v = flameshot} },
-	{ Mod1Mask,     XK_Shift_L, spawn,   SHCMD("ubar") },
-	{ ShiftMask,    XK_Alt_L,   spawn,  SHCMD("ubar") },
-	{ MODKEY|ShiftMask,     XK_r,   spawn,  SHCMD("restartdwm") }
+    /*{ 0,    XK_Print,   spawn,  {.v = flameshot} },*/
+	{ 0,                XF86XK_LaunchB,      spawn,      {.v = flameshot} },
+
+	{ Mod1Mask,         XK_Shift_L, spawn,      SHCMD("ubar") },
+	{ ShiftMask,        XK_Alt_L,   spawn,      SHCMD("ubar") },
+	{ MODKEY|ShiftMask, XK_r,       spawn,      SHCMD("restartdwm") }
 };
 
 /* button definitions */
