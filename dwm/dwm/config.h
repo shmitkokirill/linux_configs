@@ -29,7 +29,7 @@ static const char *colors[][3]      = {
 };
 
 /* tagging */
-static const char *tags[] = { "1", "2", "3", "4" };
+static const char *tags[] = { "1", "2", "3", "4", "5", "6" };
 
 static const Rule rules[] = {
 	/* xprop(1):
@@ -37,10 +37,16 @@ static const Rule rules[] = {
 	 *	WM_NAME(STRING) = title
 	 */
 	/* class      instance    title       tags mask     isfloating   monitor */
-	{ "Blender",  NULL,       NULL,       0,            1,           -1 },
-	{ "feh",      NULL,       NULL,       0,            1,           -1 },
-	{ "mpv",      NULL,       NULL,       0,            1,           -1 },
-	/*{ "Firefox",  NULL,       NULL,       1a << 8,       1,           -1 },*/
+	{ "firefox",    NULL,       NULL,         1,              0,           -1 },
+	{ "Alacritty",  NULL,       NULL,       1 << 1,           0,           -1 },
+	{ "Joplin",     NULL,       NULL,       1 << 2,           0,           -1 },
+	{ "TelegramDesktop",     
+                    NULL,       NULL,       1 << 3,           0,           -1 },
+	{ "Pavucontrol",     
+                    NULL,       NULL,         0,              1,           -1 },
+	{ "Thunar",     NULL,       NULL,       1 << 5,           0,           -1 },
+	{ "ONLYOFFICE Desktop Editors",     
+                    NULL,       NULL,       1 << 5,           0,           -1 }
 };
 
 /* layout(s) */
@@ -85,6 +91,7 @@ static const char *termcmd[]  = { "alacritty", NULL };
 static const char *brupcmd[] = { "gmux_backlight", "+30", NULL };
 static const char *brdowncmd[] = { "gmux_backlight", "-30", NULL };
 static const char *flameshot[] = { "flameshot", "gui", NULL };
+static const char *translator[] = { "translate-text", NULL };
 
 static Key keys[] = {
 	/* modifier                     key        function        argument */
@@ -131,7 +138,8 @@ static Key keys[] = {
 	{ 0,    XF86XK_MonBrightnessUp,     spawn,  {.v = brupcmd} },
 	{ 0,    XF86XK_MonBrightnessDown,   spawn,  {.v = brdowncmd} },
     /*{ 0,    XK_Print,   spawn,  {.v = flameshot} },*/
-	{ 0,                XF86XK_LaunchB,      spawn,      {.v = flameshot} },
+	{ 0,    XF86XK_LaunchB,             spawn,  {.v = flameshot} },
+	{ 0,    XK_F8,                      spawn,  {.v = translator} },
 
 	{ Mod1Mask,         XK_Shift_L, spawn,      SHCMD("ubar") },
 	{ ShiftMask,        XK_Alt_L,   spawn,      SHCMD("ubar") },
