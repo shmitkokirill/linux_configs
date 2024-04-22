@@ -1,0 +1,3 @@
+#!/bin/sh
+
+xfreerdp3 /f /u:k_schmitko /p:aF7ZmS9R /v:shmitko-w10 /scale:140 /scale-desktop:130 /drive:antec_pc,/home/kirill/Downloads &

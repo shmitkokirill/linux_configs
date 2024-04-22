@@ -1,0 +1,44 @@
+#!/bin/sh
+
+#xrandr --output eDP-1 --auto --output DP-1 --auto --scale 2x2 --right-of eDP-1
+#xrandr --output DP-2 --auto --scale 2x2 --right-of eDP-1
+
+# java applications fix
+export _JAVA_AWT_WM_NONREPARENTING=1
+
+# tearfree option
+picom -b --backend glx --vsync --xrender-sync-fence --glx-no-rebind-pixmap \
+    --use-damage --glx-no-stencil
+
+# set background
+~/.fehbg &
+
+setxkbmap us,ru -option 'grp:ctrl_space_toggle'
+
+# autostart apps ---------------------------------------------------------------
+#vk &
+#flameshot &
+telegram-desktop -startintray &
+joplin &
+pasystray &
+nm-applet &
+thunderbird &
+rocketchat-desktop &
+#libinput-gestures-setup start & # gestures
+#touchegg --daemon &
+#touchegg &
+# ------------------------------------------------------------------------------
+
+# Statusbar loop
+while true; do
+    ubar
+    sleep 1s    # Update time every second
+done &
+
+# relaunch DWM
+while true; do
+    # Log stderror to a file 
+    dwm 2> ~/.dwm.log
+    # No error logging
+    #dwm >/dev/null 2>&1
+done

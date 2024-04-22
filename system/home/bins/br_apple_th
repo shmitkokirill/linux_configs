@@ -1,0 +1,25 @@
+#!/bin/sh
+
+prev_val=$(acdcontrol /dev/usb/hiddev0 | grep BRIGHTNESS | \
+    grep -Eo '[[:digit:]]*' | tail -1)
+
+next_val=10000
+
+if [ $1 = '+' ] 
+then
+    next_val=$(($prev_val+10000))
+else
+    next_val=$(($prev_val-10000))
+fi
+
+if [ $next_val -gt 64000 ]
+then
+   next_val=64000 
+fi
+
+if [ $next_val -lt 10000 ]
+then
+   next_val=10000 
+fi
+
+acdcontrol /dev/usb/hiddev0 $next_val
