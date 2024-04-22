@@ -29,7 +29,7 @@ static const char *colors[][3]      = {
 };
 
 /* tagging */
-static const char *tags[] = { "1", "2", "3", "4", "5", "6" };
+static const char *tags[] = { "", "", "", "", "", "", "", "", "" };
 
 static const Rule rules[] = {
 	/* xprop(1):
@@ -37,16 +37,22 @@ static const Rule rules[] = {
 	 *	WM_NAME(STRING) = title
 	 */
 	/* class      instance    title       tags mask     isfloating   monitor */
-	{ "firefox",    NULL,       NULL,         1,              0,           -1 },
-	{ "Alacritty",  NULL,       NULL,       1 << 1,           0,           -1 },
-	{ "Joplin",     NULL,       NULL,       1 << 2,           0,           -1 },
+	{ "xfreerdp",   NULL,       NULL,       1,             0,           -1 },
+	{ "firefox",    NULL,       NULL,       1 << 1,        0,           -1 },
+	{ "Chromium",   NULL,       NULL,       1 << 1,        0,           -1 },
+	{ "Alacritty",  NULL,       NULL,       1 << 3,        0,           -1 },
+	{ "Joplin",     NULL,       NULL,       1 << 4,        0,           -1 },
+	{ "Pavucontrol",   
+                    NULL,       NULL,       0,             1,           -1 },
+	{ "thunderbird",  
+                    NULL,       NULL,       1 << 8,        0,           -1 },
+	{ "Rocket.Chat",     
+                    NULL,       NULL,       1 << 5,        0,           -1 },
 	{ "TelegramDesktop",     
-                    NULL,       NULL,       1 << 3,           0,           -1 },
-	{ "Pavucontrol",     
-                    NULL,       NULL,         0,              1,           -1 },
-	{ "Thunar",     NULL,       NULL,       1 << 5,           0,           -1 },
+                    NULL,       NULL,       1 << 5,        0,           -1 },
 	{ "ONLYOFFICE Desktop Editors",     
-                    NULL,       NULL,       1 << 5,           0,           -1 }
+                    NULL,       NULL,       1 << 7,        0,           -1 }
+    
 };
 
 /* layout(s) */
@@ -88,10 +94,12 @@ static const char *dmenucmd[] =
 { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", 
     col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
 static const char *termcmd[]  = { "alacritty", NULL };
-static const char *brupcmd[] = { "gmux_backlight", "+30", NULL };
-static const char *brdowncmd[] = { "gmux_backlight", "-30", NULL };
-static const char *flameshot[] = { "flameshot", "gui", NULL };
-static const char *translator[] = { "translate-text", NULL };
+static const char *brupcmd[] = { "sudo", "br_apple_th", "+", NULL };
+static const char *brdowncmd[] = { "sudo", "br_apple_th", "-", NULL };
+/*---FLAMESHOT---*/
+static const char *flameshot_full_c[] = { "flameshot", "full", "-c", NULL };
+static const char *flameshot_screen_c[] = { "flameshot", "gui", "-c", NULL };
+/*---END_FLAMESHOT---*/
 
 static Key keys[] = {
 	/* modifier                     key        function        argument */
@@ -132,14 +140,19 @@ static Key keys[] = {
 	TAGKEYS(                        XK_9,                      8)
 	{ MODKEY|ShiftMask,             XK_q,      quit,           {0} },
   	/* custom */
-	{ 0,    XF86XK_AudioMute,   spawn,  SHCMD("pactl set-sink-mute 0 toggle && dunstvol") },
-	{ 0,    XF86XK_AudioLowerVolume,    spawn,  SHCMD("pactl set-sink-volume 0 -3% && dunstvol") },
-	{ 0,    XF86XK_AudioRaiseVolume,    spawn,  SHCMD("pactl set-sink-volume 0 +3% && dunstvol") },
+	{ 0,    XF86XK_AudioMute,   spawn,  SHCMD("pactl set-sink-mute 2 toggle && dunstvol") },
+	{ 0,    XF86XK_AudioLowerVolume,    spawn,  SHCMD("pactl set-sink-volume 2 -3% && dunstvol") },
+	{ 0,    XF86XK_AudioRaiseVolume,    spawn,  SHCMD("pactl set-sink-volume 2 +3% && dunstvol") },
 	{ 0,    XF86XK_MonBrightnessUp,     spawn,  {.v = brupcmd} },
 	{ 0,    XF86XK_MonBrightnessDown,   spawn,  {.v = brdowncmd} },
-    /*{ 0,    XK_Print,   spawn,  {.v = flameshot} },*/
-	{ 0,    XF86XK_LaunchB,             spawn,  {.v = flameshot} },
-	{ 0,    XK_F8,                      spawn,  {.v = translator} },
+	{ MODKEY, XK_F2,                    spawn,  {.v = brupcmd} },
+	{ MODKEY, XK_F1,                    spawn,  {.v = brdowncmd} },
+    { 0,                XK_Print,   spawn,  SHCMD("flameshot full -p ~/Pictures/Full") },
+    { ShiftMask,        XK_Print,   spawn,  {.v = flameshot_full_c} },
+    { MODKEY,           XK_Print,   spawn,  SHCMD("flameshot gui -p ~/Pictures/Screen") },
+    { MODKEY|ShiftMask, XK_Print,   spawn,  {.v = flameshot_screen_c} },
+	/*{ 0,                XF86XK_LaunchB,      spawn,      {.v = flameshot} },*/
+	{ 0, XK_F8,       spawn,      SHCMD("translate-text") },
 
 	{ Mod1Mask,         XK_Shift_L, spawn,      SHCMD("ubar") },
 	{ ShiftMask,        XK_Alt_L,   spawn,      SHCMD("ubar") },
