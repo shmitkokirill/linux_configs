@@ -1,0 +1,3 @@
+umount /home/kirill/Work/share_ascp && umount /home/kirill/Work/share_d &&
+sleep 2 &&
+nmcli c down pfngate-UDP4-1196-k_schmitko

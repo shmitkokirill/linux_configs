@@ -1,0 +1,4 @@
+#!/bin/bash
+CF=$(cat /sys/class/power_supply/BAT0/charge_full)
+CN=$(cat /sys/class/power_supply/BAT0/charge_now)
+echo $((CN*100/CF))

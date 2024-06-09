@@ -1,0 +1,34 @@
+#!/bin/sh
+
+SEP="┇"
+
+CPU_TEMP=$( sensors | awk '{print $4}' | grep '[0-9.]' | cut '-c2-' | grep C )
+RAM_USAGE=$( free -h | awk '/Mem:/ { printf(" %5s\n", $3) }' )
+CPU_USAGE=$( mpstat 1 1 | awk '/Av/ {printf(" %s% \n", $(NF-9))}' )
+#LANG=$( xset -q|grep LED| awk '{ if (substr ($10,5,1) == 1) print "[RU]"; else print "[EN]"; }' )
+DATE_TIME=$(date +" %d.%m %H:%M")
+b_perc=$(get_bat_charge)
+batt_state=$( cat /sys/class/power_supply/BAT0/status )
+
+if (($b_perc >= 80))
+then
+    BATT=
+elif (($b_perc >= 50)) && (($b_perc < 80)) 
+then
+    BATT=
+elif (($b_perc >= 40)) && (($b_perc < 50)) 
+then
+    BATT=
+elif (($b_perc >= 20)) && (($b_perc < 40))
+then
+    BATT=" $b_perc%"
+else
+    BATT=" $b_perc%"
+fi
+
+if [ $batt_state = "Charging" ]
+then
+    BATT="$b_perc"
+fi
+
+xsetroot -rv -name "$SEP $RAM_USAGE $SEP $CPU_USAGE $CPU_TEMP $SEP $DATE_TIME $SEP $BATT $SEP"

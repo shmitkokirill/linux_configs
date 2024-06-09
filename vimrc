@@ -1,6 +1,7 @@
-" Vundle config
-set nocompatible              " be iMproved, required
-filetype off                  " required
+if !has('nvim')
+"" Vundle config
+"set nocompatible              " be iMproved, required
+"filetype off                  " required
 
 " set the runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/Vundle.vim
@@ -10,7 +11,7 @@ call vundle#begin()
 
 " let Vundle manage Vundle, required
 Plugin 'VundleVim/Vundle.vim'
-Plugin 'ycm-core/YouCompleteMe'
+"Plugin 'ycm-core/YouCompleteMe'
 Plugin 'NLKNguyen/papercolor-theme'
 Plugin 'xuhdev/vim-latex-live-preview'
 Plugin 'preservim/nerdtree'
@@ -29,10 +30,67 @@ filetype plugin indent on    " required
 " auto-approve removal
 "
 " see :h vundle for more details or wiki for FAQ
+endif
 
 " My config
-set tags=./tags
-cs add ./cscope.out
+if !has('nvim')
+    map fS :cs find s <c-r>=expand("<cword>")<cr><cr>
+    map fT :cs find t <c-r>=expand("<cword>")<cr><cr>
+    map fG :cs find g <c-r>=expand("<cword>")<cr><cr>
+else
+    map fS :Cs find s <c-r>=expand("<cword>")<cr><cr>
+    map fT :Cs find t <c-r>=expand("<cword>")<cr><cr>
+    map fG :Cs find g <c-r>=expand("<cword>")<cr><cr>
+endif
+" COC CONFIG--------------------------------------------------------------------
+" May need for Vim (not Neovim) since coc.nvim calculates byte offset by count
+" utf-8 byte sequence
+set encoding=utf-8
+" Some servers have issues with backup files, see #649
+set nobackup
+set nowritebackup
+
+" Having longer updatetime (default is 4000 ms = 4s) leads to noticeable
+" delays and poor user experience
+set updatetime=400
+
+" Always show the signcolumn, otherwise it would shift the text each time
+" diagnostics appear/become resolved
+set signcolumn=yes
+
+" Use tab for trigger completion with characters ahead and navigate
+" NOTE: There's always complete item selected by default, you may want to enable
+" no select by `"suggest.noselect": true` in your configuration file
+" NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
+" other plugin before putting this into your config
+inoremap <silent><expr> <TAB>
+      \ coc#pum#visible() ? coc#pum#next(1) :
+      \ CheckBackspace() ? "\<Tab>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
+
+" Make <CR> to accept selected completion item or notify coc.nvim to format
+" <C-g>u breaks current undo, please make your own choice
+inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
+                              \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+
+function! CheckBackspace() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+" GoTo code navigation
+nmap <silent> gD <Plug>(coc-definition)
+nmap <silent> gY <Plug>(coc-type-definition)
+nmap <silent> gI <Plug>(coc-implementation)
+nmap <silent> gR <Plug>(coc-references)
+
+"-------------------------------------------------------------------------------
+set tags+=./tags
+if !has("nvim")
+    cs add ./cscope.out
+endif
+set exrc
 
 " --- Mappings ---
 "  -- Spell Checker --
@@ -49,20 +107,27 @@ let g:ycm_autoclose_preview_window_after_completion = 1
 set t_Co=256                                    " This is may or may not needed
 set background=dark
 colorscheme PaperColor
+highlight Normal ctermfg=256 ctermbg=black
+highlight LineNr ctermfg=256 ctermbg=black
 
 " -- netrw -- 
 "let g:netrw_banner=0
 "let g:netrw_liststyle=3
 "let g:netrw_browse_split=3
 
-nnoremap <leader>n :NERDTreeFocus<CR>
-nnoremap <C-n> :NERDTree<CR>
-nnoremap <C-t> :NERDTreeToggle<CR>
-nnoremap <C-f> :NERDTreeFind<CR>
+"nnoremap <leader>n :NERDTreeFocus<CR>
+"nnoremap <C-n> :NERDTree<CR>
+nnoremap <C-l> :NERDTreeToggle<CR>
+nnoremap <C-s> :NERDTreeFind<CR>
 let g:NERDTreeNodeDelimiter = "\u00a0"
+
+" vim-powered terminal in new tab
+map <C-a> :tab term ++close<cr>
+tmap <C-a> <c-w>:tab term ++close<cr>
 
 " -- Python --
 set fileformat=unix
+
 
 " -----------------------------------------------------------------------------
 "  GENERAL SETTINGS FOR EVERYONE
@@ -88,10 +153,12 @@ set hidden
 set laststatus =2
 
 set number
+highlight LineNr ctermfg=240
 set wrap
 
 set ruler
 set colorcolumn=80
+highlight ColorColumn ctermbg=235
 set textwidth=80
 
 set incsearch
@@ -102,4 +169,6 @@ set smartcase
 
 "syntax on
 
-"set noswapfile
+set noswapfile
+set mouse-=a
+set mousehide
